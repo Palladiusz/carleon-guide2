@@ -12,6 +12,7 @@ export default function App(props: AppProps) {
       buy: 0,
       sell: 0,
       enchantment: 0,
+      tier: 2,
       fraction: Fraction.TF,
     },
   });

@@ -5,6 +5,7 @@ interface NewItemFormValues {
   buy: number;
   sell: number;
   enchantment: number;
+  tier: number;
   fraction: Fraction;
 }
 
