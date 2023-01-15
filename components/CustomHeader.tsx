@@ -58,11 +58,10 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface HeaderSearchProps {
-  links: { link: string; label: string }[];
+  links: { link: string; label: string; additionalFunction?: Function }[];
 }
 
 export function HeaderSearch({ links }: HeaderSearchProps) {
-  const [opened, { toggle }] = useDisclosure(false);
   const { classes } = useStyles();
   const router = useRouter();
 
@@ -73,6 +72,7 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
       className={classes.link}
       onClick={(event) => {
         event.preventDefault();
+        if (link.additionalFunction) link.additionalFunction();
         router.push(link.link);
       }}
     >

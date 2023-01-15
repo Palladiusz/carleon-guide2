@@ -3,6 +3,13 @@ import Head from "next/head";
 import { AppShell, MantineProvider } from "@mantine/core";
 import { HeaderSearch } from "../components/CustomHeader";
 import { Fraction, UserFormProvider, useUserForm } from "../store/formContext";
+import {
+  NotificationsProvider,
+  showNotification,
+} from "@mantine/notifications";
+import { auth } from "../server";
+import { useEffect, useState } from "react";
+import { signOut } from "firebase/auth";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -16,6 +23,17 @@ export default function App(props: AppProps) {
       fraction: Fraction.TF,
     },
   });
+  const [isUserLogged, setIsUserLogged] = useState(false);
+
+  useEffect(() => {
+    auth.onAuthStateChanged(function (user) {
+      if (user) {
+        setIsUserLogged(true);
+      } else {
+        setIsUserLogged(false);
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -36,31 +54,46 @@ export default function App(props: AppProps) {
           colorScheme: "dark",
         }}
       >
-        <AppShell
-          padding="md"
-          header={
-            <HeaderSearch
-              links={[
-                { link: "/", label: "Main" },
-                { link: "about", label: "About" },
-                { link: "", label: "About2" },
-                { link: "", label: "About3" },
-              ]}
-            />
-          }
-          styles={(theme) => ({
-            main: {
-              backgroundColor:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[8]
-                  : theme.colors.gray[0],
-            },
-          })}
-        >
-          <UserFormProvider form={form}>
-            <Component {...pageProps} />
-          </UserFormProvider>
-        </AppShell>
+        {" "}
+        <NotificationsProvider>
+          <AppShell
+            padding="md"
+            header={
+              <HeaderSearch
+                links={[
+                  { link: "/", label: "Main" },
+                  { link: "about", label: "About" },
+                  {
+                    link: "login",
+                    label: isUserLogged ? "Logout" : "Login",
+                    additionalFunction: () => {
+                      if (isUserLogged)
+                        signOut(auth).then(() =>
+                          showNotification({
+                            title: "Logged out",
+                            message: "",
+                          })
+                        );
+                    },
+                  },
+                  { link: "", label: "About3" },
+                ]}
+              />
+            }
+            styles={(theme) => ({
+              main: {
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[8]
+                    : theme.colors.gray[0],
+              },
+            })}
+          >
+            <UserFormProvider form={form}>
+              <Component {...pageProps} />
+            </UserFormProvider>
+          </AppShell>{" "}
+        </NotificationsProvider>
       </MantineProvider>
     </>
   );
