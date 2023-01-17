@@ -31,8 +31,8 @@ function Cart() {
   }, [gameItems]);
 
   const cartTableHeaders = [
-    "Total income",
     "Total outcome",
+    "Total income",
     "Percentage income",
   ];
 
