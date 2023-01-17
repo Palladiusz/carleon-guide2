@@ -961,21 +961,21 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@mantine/carousel@^5.10.1":
+"@mantine/carousel@^5.10.0":
   "integrity" "sha512-TAcWlyy5aY4ikGbxD3kYytg6adwSzARA+pTiv1JxT6kXIzWMD/9Kd0d/4bPKPJx4Jk8uYTH36YH3DHC+IwRvSA=="
   "resolved" "https://registry.npmjs.org/@mantine/carousel/-/carousel-5.10.1.tgz"
   "version" "5.10.1"
   dependencies:
     "@mantine/utils" "5.10.1"
 
-"@mantine/core@^5.10.0", "@mantine/core@5.10.0", "@mantine/core@5.10.1":
-  "integrity" "sha512-if272RiYPK0nQQdGNwcCSY7bCPJW9455qXlRhnYOr021xh89T8WFVPeDw4uwcxoXsXdKRV5GAi9irSnsUqsjJQ=="
-  "resolved" "https://registry.npmjs.org/@mantine/core/-/core-5.10.0.tgz"
-  "version" "5.10.0"
+"@mantine/core@^5.10.1", "@mantine/core@5.10.0", "@mantine/core@5.10.1":
+  "integrity" "sha512-ZVVrakV8QUFxAUNh8LCyJS6gKKpQbXSh2OQ757L/Q07aYNaYFvgwuSyI7+p32oGrgc+RZ53KroB7zZUVj/hvEw=="
+  "resolved" "https://registry.npmjs.org/@mantine/core/-/core-5.10.1.tgz"
+  "version" "5.10.1"
   dependencies:
     "@floating-ui/react-dom-interactions" "^0.10.1"
-    "@mantine/styles" "5.10.0"
-    "@mantine/utils" "5.10.0"
+    "@mantine/styles" "5.10.1"
+    "@mantine/utils" "5.10.1"
     "@radix-ui/react-scroll-area" "1.0.2"
     "react-textarea-autosize" "8.3.4"
 
@@ -1016,10 +1016,10 @@
     "@mantine/styles" "5.8.3"
     "html-react-parser" "1.4.12"
 
-"@mantine/styles@5.10.0":
-  "integrity" "sha512-3JBM5LWJHb4Yk7jymPiSuaBJRoe2CgA7KoyYWgabwBP115GlHPb1rQCcavJsobHV4U+wFfZEEUnVBpaAaXqgmw=="
-  "resolved" "https://registry.npmjs.org/@mantine/styles/-/styles-5.10.0.tgz"
-  "version" "5.10.0"
+"@mantine/styles@5.10.1":
+  "integrity" "sha512-sKJG+shOJMEYlnpLuRd1Qlu0kK9GHpYd85+q+3Wa5/IZ9jLkOeYVxLV1vnhSnhVrIxbQzrti2klSKHZBg3KpIw=="
+  "resolved" "https://registry.npmjs.org/@mantine/styles/-/styles-5.10.1.tgz"
+  "version" "5.10.1"
   dependencies:
     "clsx" "1.1.1"
     "csstype" "3.0.9"
