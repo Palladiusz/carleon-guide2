@@ -72,13 +72,7 @@ const InputDrawer: React.FC<Props> = ({ toggle, isOpened }) => {
           })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data.newItem);
-              const newItem = { ...data.newItem };
-              const updatedItems = { ...gameItems, newItem };
-
-              setCurrentItems((oldItems: ItemEntity[]) => [...oldItems]);
-              console.log(gameItems);
-              console.log(updatedItems);
+              setCurrentItems([...gameItems, data.newItem]);
 
               form.reset();
               toggle();

@@ -24,22 +24,20 @@ export default async function handler(
     const userId = body.uid;
 
     if (userId != null) {
-      // const postListRef = ref(database, userId + "/items");
-      // const newPostRef = push(postListRef, body);
-      // set(newPostRef, {
-      //   ...body,
-      //   quantity: 0,
-      //   id: newPostRef.key,
-      // });
-      const newItem: ItemEntity = {
+      const postListRef = ref(database, userId + "/items");
+      const newPostRef = push(postListRef, body);
+      set(newPostRef, {
         ...body,
         quantity: 0,
-        id: "newPostRef.keyjhgddd",
-      };
-      // console.log(newItem);
+        id: newPostRef.key,
+      });
 
       return res.status(201).json({
-        newItem: newItem,
+        newItem: {
+          ...body,
+          quantity: 0,
+          id: newPostRef.key,
+        },
         message: "Added item successfully!",
       });
     } else {

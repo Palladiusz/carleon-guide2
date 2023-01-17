@@ -27,18 +27,18 @@ interface Props {
 export default function IndexPage(props: Props) {
   const [isDrawerOpen, toggleDrawer] = useToggle();
   const [showCart, setshowCart] = useToggle();
-  const { gameItems: items, setCurrentItems } = useContext(ItemsContext);
+  const { gameItems, setCurrentItems } = useContext(ItemsContext);
 
   useEffect(() => {
     setCurrentItems(props.itemEntities);
-  }, [items]);
+  }, []);
 
   let rows;
 
   const form = useUserFormContext();
 
-  if (items.length > 0) {
-    rows = items.map((element) => {
+  if (gameItems.length > 0) {
+    rows = gameItems.map((element) => {
       const {
         name,
         enchant,

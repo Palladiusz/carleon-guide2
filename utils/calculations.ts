@@ -4,6 +4,9 @@ import { Fraction } from "../store/formContext";
 export function calculateProfitInPercentages(buy: number, sell: number) {
   const profitValue = sell - buy;
   const value = ((profitValue / buy) * 100).toFixed(2) + "%";
+  if (isNaN(profitValue)) {
+    return "0%";
+  }
   return value;
 }
 
@@ -19,8 +22,11 @@ export function cartCalculate(items: ItemEntity[]) {
     .map((item) => item.buy * item.quantity)
     .reduce((a, b) => a + b);
 
-  const percentageIncome =
-    ((totalIncome / totalOutcome) * 100).toFixed(2) + "%";
+  let percentageIncome = ((totalIncome / totalOutcome) * 100).toFixed(2) + "%";
+
+  if (isNaN((totalIncome / totalOutcome) * 100)) {
+    percentageIncome = "0%";
+  }
 
   return { totalIncome, totalOutcome, percentageIncome };
 }
