@@ -1,6 +1,6 @@
 import { faCheck, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, NumberInput } from "@mantine/core";
+import { Button, NumberInput, TextInput } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useContext, useState } from "react";
 
@@ -69,6 +69,37 @@ function SingleItemRow(rowProps: ITableElementsProps) {
       );
   }
 
+  async function handleDelete() {
+    const body = { itemId: id, uid: auth.user?.uid };
+
+    const res = await fetch("http://localhost:3000/api/hello", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const updatedList = gameItems.filter((e) => e.id !== id);
+
+        setCurrentItems(updatedList);
+
+        showNotification({
+          title: name,
+          message: data.message,
+          icon: <FontAwesomeIcon icon={faTrash} />,
+        });
+      })
+      .catch(() =>
+        showNotification({
+          title: "Error",
+          message: "Failed to delete item",
+          color: "red",
+        })
+      );
+  }
+
   return (
     <tr key={id}>
       <td>
@@ -91,9 +122,56 @@ function SingleItemRow(rowProps: ITableElementsProps) {
       <td>
         <ItemImage enchant={enchant} name={name} tier={tier} />
       </td>
-      <td>{name}</td>
-      <td>{buy}</td>
-      <td>{sell}</td>
+      <td>
+        {isEdit ? (
+          <TextInput
+            defaultValue={name}
+            value={editValues.name}
+            onChange={(e) => {
+              setEditValues({
+                ...editValues,
+                name: e.target.value,
+              });
+            }}
+          />
+        ) : (
+          name
+        )}
+      </td>
+      <td>
+        {isEdit ? (
+          <NumberInput
+            defaultValue={buy}
+            value={editValues.buy}
+            min={0}
+            onChange={(e) => {
+              setEditValues({
+                ...editValues,
+                buy: e!,
+              });
+            }}
+          />
+        ) : (
+          buy
+        )}
+      </td>
+      <td>
+        {isEdit ? (
+          <NumberInput
+            defaultValue={sell}
+            value={editValues.sell}
+            min={0}
+            onChange={(e) => {
+              setEditValues({
+                ...editValues,
+                sell: e!,
+              });
+            }}
+          />
+        ) : (
+          sell
+        )}
+      </td>
       <td>{sell - buy}</td>
       <td>{calculateProfitInPercentages(buy, sell)}</td>
       <td>{tier}</td>
@@ -121,7 +199,11 @@ function SingleItemRow(rowProps: ITableElementsProps) {
             </Button>
           )}
 
-          <Button leftIcon={<FontAwesomeIcon icon={faTrash} />} size="xs">
+          <Button
+            onClick={handleDelete}
+            leftIcon={<FontAwesomeIcon icon={faTrash} />}
+            size="xs"
+          >
             Delete
           </Button>
         </Button.Group>

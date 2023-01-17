@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { child, get, onValue, push, ref, set } from "firebase/database";
+import { child, get, push, ref, remove, set } from "firebase/database";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ItemEntity } from "../../interfaces";
-import { auth, database } from "../../server";
+import { database } from "../../server";
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,11 +44,10 @@ export default async function handler(
       return res.status(500).json({ message: "Adding item failed" });
     }
   }
+
   if (method === "PUT") {
-    // const body = await req.body;
     const { modifiedItem, uid } = await req.body;
 
-    // const { item } = JSON.parse(body);
     const postListRef = ref(database, uid + "/items" + `/${modifiedItem.id}`);
     console.log(modifiedItem);
 
@@ -59,6 +58,19 @@ export default async function handler(
     return res.status(201).json({
       editedItem: modifiedItem,
       message: "Successfully edited item!",
+    });
+  }
+
+  if (method === "DELETE") {
+    const { itemId, uid } = await req.body;
+    console.log(itemId);
+
+    const postListRef = ref(database, uid + "/items" + `/${itemId}`);
+    console.log(itemId);
+
+    remove(postListRef);
+    return res.status(201).json({
+      message: "Successfully deleted item!",
     });
   }
 }

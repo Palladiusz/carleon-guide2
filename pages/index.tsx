@@ -6,33 +6,21 @@ import { ItemEntity } from "../interfaces";
 import { GetServerSidePropsContext } from "next";
 import nookies from "nookies";
 import { firebaseAdmin } from "../firebaseAdmin";
-import ItemImage from "../components/ItemImage";
-import {
-  calculateProfitInPercentages,
-  cartCalculate,
-} from "../utils/calculations";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCartShopping,
-  faEdit,
-  faPlus,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
-import { useContext, useEffect } from "react";
+import { faCartShopping, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useContext, useEffect, useState } from "react";
 import { ItemsContext } from "../store/itemsContext";
-import SingleItemRow from "../components/singleItemRow";
+import SingleItemRow from "../components/SingleItemRow";
+import Cart from "../components/Cart";
 
 interface Props {
   itemEntities: ItemEntity[];
-  message: string;
-  totalIncome: number;
-  totalOutcome: number;
-  percentageIncome: string;
 }
 
 export default function IndexPage(props: Props) {
   const [isDrawerOpen, toggleDrawer] = useToggle();
-  const [showCart, setshowCart] = useToggle();
+  const [showCart, setShowCart] = useToggle();
   const { gameItems, setCurrentItems } = useContext(ItemsContext);
 
   useEffect(() => {
@@ -89,7 +77,7 @@ export default function IndexPage(props: Props) {
           </Button>
           <Button
             leftIcon={<FontAwesomeIcon icon={faCartShopping} />}
-            onClick={() => setshowCart()}
+            onClick={() => setShowCart()}
           >
             Show cart
           </Button>
@@ -97,24 +85,7 @@ export default function IndexPage(props: Props) {
       </Center>
 
       <Collapse in={showCart}>
-        <Table striped horizontalSpacing="md">
-          <thead>
-            <tr>
-              {cartTableHeaders.map((e) => (
-                <th key={e} style={{ textAlign: "center" }}>
-                  {e}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody style={{ textAlign: "center" }}>
-            <tr>
-              <td>{props.totalOutcome}</td>
-              <td>{props.totalIncome}</td>
-              <td>{props.percentageIncome}</td>
-            </tr>
-          </tbody>
-        </Table>
+        <Cart />
       </Collapse>
 
       <Table striped horizontalSpacing="md">
@@ -149,21 +120,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       .then((response) => response.json())
       .then((data) => {
         items = data;
-        const calculatedCart = cartCalculate(items as ItemEntity[]);
-        totalIncome = calculatedCart.totalIncome;
-        totalOutcome = calculatedCart.totalOutcome;
-        percentageIncome = calculatedCart.percentageIncome;
       });
-
-    // items = await res.json();
-    // if (items) {
-    //   const calculatedCart = cartCalculate(items as ItemEntity[]);
-    //   totalIncome = calculatedCart.totalIncome;
-    //   console.log(totalIncome);
-
-    //   totalOutcome = calculatedCart.totalOutcome;
-    //   percentageIncome = calculatedCart.percentageIncome;
-    // }
   }
 
   return {
