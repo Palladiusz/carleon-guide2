@@ -13,8 +13,7 @@ export default async function handler(
     const dbRef = ref(database);
 
     const dataQuery = await get(child(dbRef, `${query.name}`));
-    const tempVal = await dataQuery.val();
-    const data = tempVal?.items || [];
+    const data = await dataQuery.val()?.items;
     const values = Object.keys(data).map((key) => data[key]);
     const items = values.map((element: ItemEntity) => element);
     return res.status(200).json(items);
