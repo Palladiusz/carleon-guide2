@@ -62,7 +62,7 @@ const InputDrawer: React.FC<Props> = ({ toggle, isOpened }) => {
         onClick={async () => {
           const body = { ...form.values, uid: auth.user?.uid };
 
-          const res = await fetch("http://localhost:3000/api/hello", {
+          const res = await fetch("/api/hello", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

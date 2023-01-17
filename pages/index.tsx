@@ -114,7 +114,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   if (token) {
     const { uid } = token;
 
-    const res = await fetch(`http://localhost:3000/api/hello?name=${uid}`)
+    const res = await fetch(`/api/hello?name=${uid}`)
       .then((response) => response.json())
       .then((data) => {
         items = data;

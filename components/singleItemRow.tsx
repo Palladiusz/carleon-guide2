@@ -38,7 +38,7 @@ function SingleItemRow(rowProps: ITableElementsProps) {
     const body = { modifiedItem, uid: auth.user?.uid };
     console.log(body);
 
-    const res = await fetch("http://localhost:3000/api/hello", {
+    const res = await fetch("/api/hello", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +71,7 @@ function SingleItemRow(rowProps: ITableElementsProps) {
   async function handleDelete() {
     const body = { itemId: id, uid: auth.user?.uid };
 
-    const res = await fetch("http://localhost:3000/api/hello", {
+    const res = await fetch("/api/hello", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
