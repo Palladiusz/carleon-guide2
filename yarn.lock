@@ -1895,17 +1895,17 @@
   "resolved" "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.284.tgz"
   "version" "1.4.284"
 
-"embla-carousel-react@^7.0.0":
-  "integrity" "sha512-qhw980gKj7G+O5d3WSwj0TyhcbpGP3DqJPiAatt1t3wEEcZqn7csaIfLh4e1N/0kna9sZfZZRzz+//NSrUodSg=="
-  "resolved" "https://registry.npmjs.org/embla-carousel-react/-/embla-carousel-react-7.0.5.tgz"
-  "version" "7.0.5"
+"embla-carousel-react@^7.0.0", "embla-carousel-react@^7.0.6":
+  "integrity" "sha512-tl7dB8X9bCd7j8iiU8Nm/JZjiWRsNLofH7dmc0TjVMvMZ+eEy5NvZVq08Nv10lBuqGW87X+i98HoKojkga91Vw=="
+  "resolved" "https://registry.npmjs.org/embla-carousel-react/-/embla-carousel-react-7.0.6.tgz"
+  "version" "7.0.6"
   dependencies:
-    "embla-carousel" "7.0.5"
+    "embla-carousel" "7.0.6"
 
-"embla-carousel@7.0.5":
-  "integrity" "sha512-loRcu0La0F7bhEMwbvgpi14iaaIEdwacH1xoplnaYfwN4KMgECkiuLgu4lx+v6MYd6lSpg/bw7ZxEuLUwYjavg=="
-  "resolved" "https://registry.npmjs.org/embla-carousel/-/embla-carousel-7.0.5.tgz"
-  "version" "7.0.5"
+"embla-carousel@7.0.6":
+  "integrity" "sha512-0YrByGAaXxl968KSljUl+28rV0PrpR25aU/Af1Sw/1F3nMco391ZkMV9U2SZu9glEqicM8knuqnOrvLJaNxTWw=="
+  "resolved" "https://registry.npmjs.org/embla-carousel/-/embla-carousel-7.0.6.tgz"
+  "version" "7.0.6"
 
 "emoji-regex@^8.0.0":
   "integrity" "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="
