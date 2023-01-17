@@ -8,7 +8,9 @@ import * as firebaseAdmin from "firebase-admin";
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert({
-      privateKey: process.env.REACT_APP_PRIVATE_KEY,
+      privateKey: process.env.REACT_APP_PRIVATE_KEY
+        ? process.env.REACT_APP_PRIVATE_KEY.replace(/\\n/gm, "\n")
+        : undefined,
       clientEmail: process.env.REACT_APP_CLIENT_EMAIL,
       projectId: process.env.REACT_APP_PROJECT_ID,
     }),
