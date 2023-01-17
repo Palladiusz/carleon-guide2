@@ -11,7 +11,7 @@ export function calculateTotalProfit(items: ItemEntity[]) {
   return items.map((item) => item.sell - item.buy).reduce((a, b) => a + b);
 }
 
-export function initialCalculations(items: ItemEntity[]) {
+export function cartCalculate(items: ItemEntity[]) {
   const totalIncome = items
     .map((item) => (item.sell - item.buy) * item.quantity)
     .reduce((a, b) => a + b);
@@ -19,10 +19,10 @@ export function initialCalculations(items: ItemEntity[]) {
     .map((item) => item.buy * item.quantity)
     .reduce((a, b) => a + b);
 
-  const percentageTotalValue =
+  const percentageIncome =
     ((totalIncome / totalOutcome) * 100).toFixed(2) + "%";
 
-  return { totalIncome, totalOutcome, percentageTotalValue };
+  return { totalIncome, totalOutcome, percentageIncome };
 }
 
 export function getFractionColor(fraction: Fraction) {

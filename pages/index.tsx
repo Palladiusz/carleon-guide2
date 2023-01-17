@@ -1,31 +1,30 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { Button, Center, Collapse, Group, Table, Text } from "@mantine/core";
+import { Button, Center, Collapse, Table } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
-import { showNotification } from "@mantine/notifications";
 import InputDrawer from "../components/AddItemDrawer";
-import Image from "next/image";
 import { useUserFormContext } from "../store/formContext";
-import { useContext, useEffect, useState } from "react";
-import { auth } from "../server";
 import { ItemEntity } from "../interfaces";
-import { AuthContext, useAuth } from "../store/authContext";
 import { GetServerSidePropsContext } from "next";
 import nookies from "nookies";
 import { firebaseAdmin } from "../firebaseAdmin";
-import { getImgUrl } from "../utils/getImgUrl";
 import ItemImage from "../components/ItemImage";
-import { calculateProfitInPercentages } from "../utils/calculations";
+import {
+  calculateProfitInPercentages,
+  cartCalculate,
+} from "../utils/calculations";
 
 interface Props {
   itemEntities: ItemEntity[];
   message: string;
+  totalIncome: number;
+  totalOutcome: number;
+  percentageIncome: string;
 }
 
 export default function IndexPage(props: Props) {
   const [isDrawerOpen, toggleDrawer] = useToggle();
   const [showCart, setshowCart] = useToggle();
-  let rows = [];
+
+  let rows;
 
   const form = useUserFormContext();
 
@@ -92,20 +91,13 @@ export default function IndexPage(props: Props) {
   return (
     <>
       <InputDrawer isOpened={isDrawerOpen} toggle={toggleDrawer} />
-      <Button
-        onClick={async () => {
-          auth.onAuthStateChanged(async function (user) {
-            if (user) {
-              const res = await fetch(`/api/hello?name=${user.uid}`);
-              console.log(await res.json());
-            } else {
-            }
-          });
-        }}
-      >
-        {form.values.fraction}
-      </Button>
-      <Button onClick={() => setshowCart()}>Toggle content</Button>
+
+      <Center>
+        <Button.Group>
+          <Button onClick={() => toggleDrawer()}>Add new item!</Button>
+          <Button onClick={() => setshowCart()}>Show cart</Button>
+        </Button.Group>
+      </Center>
 
       <Collapse in={showCart}>
         <Table striped horizontalSpacing="md">
@@ -120,9 +112,9 @@ export default function IndexPage(props: Props) {
           </thead>
           <tbody style={{ textAlign: "center" }}>
             <tr>
-              <td>jgfdgfd</td>
-              <td>hgf</td>
-              <td>jghf</td>
+              <td>{props.totalOutcome}</td>
+              <td>{props.totalIncome}</td>
+              <td>{props.percentageIncome}</td>
             </tr>
           </tbody>
         </Table>
@@ -140,15 +132,14 @@ export default function IndexPage(props: Props) {
         </thead>
         <tbody style={{ textAlign: "center" }}>{rows}</tbody>
       </Table>
-      {<Button>{props.message}</Button>}
-      <Group position="center">
-        <Button onClick={() => toggleDrawer()}>Open Drawer</Button>
-      </Group>
     </>
   );
 }
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   let items = {};
+  let totalIncome = 0;
+  let totalOutcome = 0;
+  let percentageIncome = "0%";
   const cookies = nookies.get(ctx);
   console.log(cookies.token);
   const token = await firebaseAdmin
@@ -163,11 +154,18 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const res = await fetch(`http://localhost:3000/api/hello?name=${uid}`);
 
     items = await res.json();
+    const calculatedCart = cartCalculate(items as ItemEntity[]);
+    totalIncome = calculatedCart.totalIncome;
+    totalOutcome = calculatedCart.totalOutcome;
+    percentageIncome = calculatedCart.percentageIncome;
   }
 
   return {
     props: {
       itemEntities: items,
+      totalIncome,
+      totalOutcome,
+      percentageIncome,
     },
   };
 };
