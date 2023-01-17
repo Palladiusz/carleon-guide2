@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
 import { AuthProvider } from "../store/authContext";
 import { ItemsProvider } from "../store/itemsContext";
+import { SearchProvider } from "../store/searchContext";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -60,45 +61,47 @@ export default function App(props: AppProps) {
         >
           {" "}
           <NotificationsProvider>
-            <AppShell
-              padding="md"
-              header={
-                <HeaderSearch
-                  links={[
-                    { link: "/", label: "Main" },
-                    { link: "about", label: "About" },
-                    {
-                      link: "login",
-                      label: isUserLogged ? "Logout" : "Login",
-                      additionalFunction: () => {
-                        if (isUserLogged)
-                          signOut(auth).then(() =>
-                            showNotification({
-                              title: "Logged out",
-                              message: "",
-                            })
-                          );
+            <SearchProvider>
+              <AppShell
+                padding="md"
+                header={
+                  <HeaderSearch
+                    links={[
+                      { link: "/", label: "Main" },
+                      { link: "about", label: "About" },
+                      {
+                        link: "login",
+                        label: isUserLogged ? "Logout" : "Login",
+                        additionalFunction: () => {
+                          if (isUserLogged)
+                            signOut(auth).then(() =>
+                              showNotification({
+                                title: "Logged out",
+                                message: "",
+                              })
+                            );
+                        },
                       },
-                    },
-                    { link: "", label: "About3" },
-                  ]}
-                />
-              }
-              styles={(theme) => ({
-                main: {
-                  backgroundColor:
-                    theme.colorScheme === "dark"
-                      ? theme.colors.dark[8]
-                      : theme.colors.gray[0],
-                },
-              })}
-            >
-              <ItemsProvider>
-                <UserFormProvider form={form}>
-                  <Component {...pageProps} />
-                </UserFormProvider>
-              </ItemsProvider>
-            </AppShell>
+                      { link: "", label: "About3" },
+                    ]}
+                  />
+                }
+                styles={(theme) => ({
+                  main: {
+                    backgroundColor:
+                      theme.colorScheme === "dark"
+                        ? theme.colors.dark[8]
+                        : theme.colors.gray[0],
+                  },
+                })}
+              >
+                <ItemsProvider>
+                  <UserFormProvider form={form}>
+                    <Component {...pageProps} />
+                  </UserFormProvider>
+                </ItemsProvider>
+              </AppShell>
+            </SearchProvider>
           </NotificationsProvider>
         </MantineProvider>
       </AuthProvider>

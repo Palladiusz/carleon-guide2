@@ -13,6 +13,7 @@ import { useContext, useEffect, useState } from "react";
 import { ItemsContext } from "../store/itemsContext";
 import SingleItemRow from "../components/SingleItemRow";
 import Cart from "../components/Cart";
+import { SearchContext } from "../store/searchContext";
 
 interface Props {
   itemEntities: ItemEntity[];
@@ -22,6 +23,7 @@ export default function IndexPage(props: Props) {
   const [isDrawerOpen, toggleDrawer] = useToggle();
   const [showCart, setShowCart] = useToggle();
   const { gameItems, setCurrentItems } = useContext(ItemsContext);
+  const { searchTerm } = useContext(SearchContext);
 
   useEffect(() => {
     setCurrentItems(props.itemEntities);
@@ -32,9 +34,13 @@ export default function IndexPage(props: Props) {
   const form = useUserFormContext();
 
   if (gameItems.length > 0) {
-    rows = gameItems.map((element) => {
-      return <SingleItemRow key={element.id} item={element} />;
-    });
+    rows = gameItems
+      .filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .map((element) => {
+        return <SingleItemRow key={element.id} item={element} />;
+      });
   } else {
     rows = (
       <tr key={""}>
@@ -55,12 +61,6 @@ export default function IndexPage(props: Props) {
     "Ench",
     "City",
     "Options",
-  ];
-
-  const cartTableHeaders = [
-    "Total outcome",
-    "Total income",
-    "Percentage income",
   ];
 
   return (

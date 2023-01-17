@@ -34,12 +34,18 @@ function Cart() {
     }
   }, [gameItems]);
 
+  const cartTableHeaders = [
+    "Total outcome",
+    "Total income",
+    "Percentage income",
+  ];
+
   return (
     <>
       <Table striped horizontalSpacing="md" withBorder withColumnBorders>
         <thead>
           <tr>
-            {["income", "outcome", "perc"].map((e) => (
+            {cartTableHeaders.map((e) => (
               <th key={e} style={{ textAlign: "center" }}>
                 {e}
               </th>

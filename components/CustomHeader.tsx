@@ -5,10 +5,11 @@ import {
   Group,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import { SearchContext } from "../store/searchContext";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -64,6 +65,8 @@ interface HeaderSearchProps {
 export function HeaderSearch({ links }: HeaderSearchProps) {
   const { classes } = useStyles();
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
+  const { setSearchTerm } = useContext(SearchContext);
 
   const items = links.map((link) => (
     <a
@@ -80,6 +83,11 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
     </a>
   ));
 
+  function handleSearch(e: string) {
+    setSearchValue(e);
+    setSearchTerm(e);
+  }
+
   return (
     <Header height={65} className={classes.header} mb={120}>
       <div className={classes.inner}>
@@ -95,15 +103,9 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
             className={classes.search}
             placeholder="Search"
             icon={<FontAwesomeIcon icon={faSearch} />}
-            data={[
-              "React",
-              "Angular",
-              "Vue",
-              "Next.js",
-              "Riot.js",
-              "Svelte",
-              "Blitz.js",
-            ]}
+            data={["bow", "cowl", "jacket", "shoes"]}
+            value={searchValue}
+            onChange={handleSearch}
           />
         </Group>
       </div>
