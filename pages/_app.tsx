@@ -69,6 +69,7 @@ export default function App(props: AppProps) {
                     links={[
                       { link: "/", label: "Main" },
                       { link: "about", label: "About" },
+                      { link: "tutorial", label: "Tutorial" },
                       {
                         link: "login",
                         label: isUserLogged ? "Logout" : "Login",
@@ -82,7 +83,6 @@ export default function App(props: AppProps) {
                             );
                         },
                       },
-                      { link: "", label: "About3" },
                     ]}
                   />
                 }
