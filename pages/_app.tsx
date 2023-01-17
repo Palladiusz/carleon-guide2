@@ -43,7 +43,7 @@ export default function App(props: AppProps) {
       {" "}
       <AuthProvider>
         <Head>
-          <title>Page title</title>
+          <title>Carleon guide 2</title>
           <link rel="shortcut icon" href="/favicon.svg" />
           <meta
             name="viewport"
