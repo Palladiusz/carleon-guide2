@@ -1,12 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { Button, Group, Table } from "@mantine/core";
+import { Button, Center, Collapse, Group, Table, Text } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import InputDrawer from "../components/AddItemDrawer";
 import Image from "next/image";
 import { useUserFormContext } from "../store/formContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { auth } from "../server";
 import { ItemEntity } from "../interfaces";
 import { AuthContext, useAuth } from "../store/authContext";
@@ -15,6 +15,7 @@ import nookies from "nookies";
 import { firebaseAdmin } from "../firebaseAdmin";
 import { getImgUrl } from "../utils/getImgUrl";
 import ItemImage from "../components/ItemImage";
+import { calculateProfitInPercentages } from "../utils/calculations";
 
 interface Props {
   itemEntities: ItemEntity[];
@@ -23,22 +24,70 @@ interface Props {
 
 export default function IndexPage(props: Props) {
   const [isDrawerOpen, toggleDrawer] = useToggle();
+  const [showCart, setshowCart] = useToggle();
+  let rows = [];
 
   const form = useUserFormContext();
 
-  const rows = props.itemEntities.map((element) => {
-    const { name, enchant, tier } = element;
-    return (
-      <tr key={element.name}>
-        <td>
-          <ItemImage enchant={enchant} name={name} tier={tier} />
-        </td>
-        <td>{element.name}</td>
-        <td>{element.buy}</td>
-        <td>{element.sell}</td>
+  if (props.itemEntities.length > 0) {
+    rows = props.itemEntities.map((element) => {
+      const {
+        name,
+        enchant,
+        tier,
+        sell,
+        buy,
+        id,
+        quantity,
+        fraction,
+      } = element;
+      return (
+        <tr key={id}>
+          <td>{quantity}</td>
+          <td>
+            <ItemImage enchant={enchant} name={name} tier={tier} />
+          </td>
+          <td>{name}</td>
+          <td>{buy}</td>
+          <td>{sell}</td>
+          <td>{sell - buy}</td>
+          <td>{calculateProfitInPercentages(buy, sell)}</td>
+          <td>{tier}</td>
+          <td>
+            <Center>{enchant}</Center>
+          </td>
+          <td>{fraction}</td>
+          <td>Options</td>
+        </tr>
+      );
+    });
+  } else {
+    rows = (
+      <tr key={""}>
+        <td></td>
       </tr>
     );
-  });
+  }
+
+  const tableHeaders = [
+    "Quantity",
+    "Image",
+    "Item name",
+    "Buy price",
+    "Sell price",
+    "Income",
+    "Income in %",
+    "Tier",
+    "Ench",
+    "City",
+    "Options",
+  ];
+
+  const cartTableHeaders = [
+    "Total outcome",
+    "Total income",
+    "Percentage income",
+  ];
 
   return (
     <>
@@ -56,16 +105,40 @@ export default function IndexPage(props: Props) {
       >
         {form.values.fraction}
       </Button>
-      <Table>
+      <Button onClick={() => setshowCart()}>Toggle content</Button>
+
+      <Collapse in={showCart}>
+        <Table striped horizontalSpacing="md">
+          <thead>
+            <tr>
+              {cartTableHeaders.map((e) => (
+                <th key={e} style={{ textAlign: "center" }}>
+                  {e}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody style={{ textAlign: "center" }}>
+            <tr>
+              <td>jgfdgfd</td>
+              <td>hgf</td>
+              <td>jghf</td>
+            </tr>
+          </tbody>
+        </Table>
+      </Collapse>
+
+      <Table striped horizontalSpacing="md">
         <thead>
           <tr>
-            <th>Item name</th>
-            <th>Image</th>
-            <th>Buy</th>
-            <th>Sell</th>
+            {tableHeaders.map((e) => (
+              <th key={e} style={{ textAlign: "center" }}>
+                {e}
+              </th>
+            ))}
           </tr>
         </thead>
-        <tbody>{rows}</tbody>
+        <tbody style={{ textAlign: "center" }}>{rows}</tbody>
       </Table>
       {<Button>{props.message}</Button>}
       <Group position="center">
@@ -75,17 +148,22 @@ export default function IndexPage(props: Props) {
   );
 }
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  let items = {};
   const cookies = nookies.get(ctx);
   console.log(cookies.token);
-  const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+  const token = await firebaseAdmin
+    .auth()
+    .verifyIdToken(cookies.token)
+    .catch(() => console.log("erorooror"));
 
   // the user is authenticated!
-  const { uid } = token;
+  if (token) {
+    const { uid } = token;
 
-  let items = {};
-  const res = await fetch(`http://localhost:3000/api/hello?name=${uid}`);
+    const res = await fetch(`http://localhost:3000/api/hello?name=${uid}`);
 
-  items = await res.json();
+    items = await res.json();
+  }
 
   return {
     props: {
