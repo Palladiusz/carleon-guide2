@@ -104,7 +104,7 @@ export default function IndexPage(props: Props) {
   );
 }
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  let items = {};
+  let items: ItemEntity[] = [];
 
   const cookies = nookies.get(ctx);
 
