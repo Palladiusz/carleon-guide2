@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
 import { ItemsContext } from "../store/itemsContext";
-import SingleItemRow from "../components/SingleItemRow";
+import SingleItemRow from "../components/singleItemRow";
 import Cart from "../components/Cart";
 import { SearchContext } from "../store/searchContext";
 
