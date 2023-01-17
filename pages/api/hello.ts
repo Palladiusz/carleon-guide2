@@ -44,4 +44,21 @@ export default async function handler(
       return res.status(500).json({ message: "Adding item failed" });
     }
   }
+  if (method === "PUT") {
+    // const body = await req.body;
+    const { modifiedItem, uid } = await req.body;
+
+    // const { item } = JSON.parse(body);
+    const postListRef = ref(database, uid + "/items" + `/${modifiedItem.id}`);
+    console.log(modifiedItem);
+
+    set(postListRef, {
+      ...modifiedItem,
+    });
+
+    return res.status(201).json({
+      editedItem: modifiedItem,
+      message: "Successfully edited item!",
+    });
+  }
 }

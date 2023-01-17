@@ -12,9 +12,15 @@ import {
   cartCalculate,
 } from "../utils/calculations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCartShopping,
+  faEdit,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect } from "react";
 import { ItemsContext } from "../store/itemsContext";
+import SingleItemRow from "../components/singleItemRow";
 
 interface Props {
   itemEntities: ItemEntity[];
@@ -39,35 +45,7 @@ export default function IndexPage(props: Props) {
 
   if (gameItems.length > 0) {
     rows = gameItems.map((element) => {
-      const {
-        name,
-        enchant,
-        tier,
-        sell,
-        buy,
-        id,
-        quantity,
-        fraction,
-      } = element;
-      return (
-        <tr key={id}>
-          <td>{quantity}</td>
-          <td>
-            <ItemImage enchant={enchant} name={name} tier={tier} />
-          </td>
-          <td>{name}</td>
-          <td>{buy}</td>
-          <td>{sell}</td>
-          <td>{sell - buy}</td>
-          <td>{calculateProfitInPercentages(buy, sell)}</td>
-          <td>{tier}</td>
-          <td>
-            <Center>{enchant}</Center>
-          </td>
-          <td>{fraction}</td>
-          <td>Options</td>
-        </tr>
-      );
+      return <SingleItemRow key={element.id} item={element} />;
     });
   } else {
     rows = (
