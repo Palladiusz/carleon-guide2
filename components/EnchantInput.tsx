@@ -6,19 +6,19 @@ import { Text, Center } from "@mantine/core";
 
 function EnchantInput() {
   const form = useUserFormContext();
-  const starCount = form.values.enchantment;
+  const starCount = form.values.enchant;
 
   function handleStarClick(starValue: number) {
     if (starCount === 1 && starValue === 1) {
-      form.setFieldValue("enchantment", 0);
+      form.setFieldValue("enchant", 0);
     } else {
-      form.setFieldValue("enchantment", starValue);
+      form.setFieldValue("enchant", starValue);
     }
   }
 
   return (
     <>
-      <Text fw={500}>Enchantment</Text>
+      <Text fw={500}>Enchant</Text>
       <Center>
         <button onClick={() => handleStarClick(1)}>
           <FontAwesomeIcon

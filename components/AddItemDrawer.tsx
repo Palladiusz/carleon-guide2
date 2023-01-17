@@ -1,16 +1,24 @@
 import { Button, Divider, Drawer, NumberInput, TextInput } from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useUserFormContext } from "../store/formContext";
 import EnchantInput from "./EnchantInput";
 import FractionInput from "./FractionInput";
 import TierInput from "./TierInput";
+import { AuthContext } from "../store/authContext";
+import { showNotification } from "@mantine/notifications";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { ItemsContext } from "../store/itemsContext";
+import { ItemEntity } from "../interfaces";
 
 interface Props {
   toggle: () => void;
   isOpened: boolean;
 }
 const InputDrawer: React.FC<Props> = ({ toggle, isOpened }) => {
+  const auth = useContext(AuthContext);
+  const { gameItems, setCurrentItems } = useContext(ItemsContext);
+
   const form = useUserFormContext();
 
   return (
@@ -52,17 +60,45 @@ const InputDrawer: React.FC<Props> = ({ toggle, isOpened }) => {
       <FractionInput />
       <Divider my="sm" />
       <Button
-        onClick={() => {
-          console.log(form.values.name);
-          console.log(form.values.buy);
-          console.log(form.values.sell);
-          console.log(form.values.enchantment);
-          form.reset();
+        onClick={async () => {
+          const body = { ...form.values, uid: auth.user?.uid };
 
-          toggle();
+          const res = await fetch("http://localhost:3000/api/hello", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data.newItem);
+              const newItem = { ...data.newItem };
+              const updatedItems = { ...gameItems, newItem };
+
+              setCurrentItems((oldItems: ItemEntity[]) => [...oldItems]);
+              console.log(gameItems);
+              console.log(updatedItems);
+
+              form.reset();
+              toggle();
+
+              showNotification({
+                title: data.newItem.name,
+                message: data.message,
+                icon: <FontAwesomeIcon icon={faCheck} />,
+              });
+            })
+            .catch(() =>
+              showNotification({
+                title: "Error",
+                message: "Failed to add item",
+                color: "red",
+              })
+            );
         }}
       >
-        Submit
+        Submit new item
       </Button>
     </Drawer>
   );

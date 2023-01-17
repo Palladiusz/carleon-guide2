@@ -11,6 +11,10 @@ import {
   calculateProfitInPercentages,
   cartCalculate,
 } from "../utils/calculations";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { useContext, useEffect } from "react";
+import { ItemsContext } from "../store/itemsContext";
 
 interface Props {
   itemEntities: ItemEntity[];
@@ -23,13 +27,18 @@ interface Props {
 export default function IndexPage(props: Props) {
   const [isDrawerOpen, toggleDrawer] = useToggle();
   const [showCart, setshowCart] = useToggle();
+  const { gameItems: items, setCurrentItems } = useContext(ItemsContext);
+
+  useEffect(() => {
+    setCurrentItems(props.itemEntities);
+  }, [items]);
 
   let rows;
 
   const form = useUserFormContext();
 
-  if (props.itemEntities.length > 0) {
-    rows = props.itemEntities.map((element) => {
+  if (items.length > 0) {
+    rows = items.map((element) => {
       const {
         name,
         enchant,
@@ -94,8 +103,18 @@ export default function IndexPage(props: Props) {
 
       <Center>
         <Button.Group>
-          <Button onClick={() => toggleDrawer()}>Add new item!</Button>
-          <Button onClick={() => setshowCart()}>Show cart</Button>
+          <Button
+            leftIcon={<FontAwesomeIcon icon={faPlus} />}
+            onClick={() => toggleDrawer()}
+          >
+            Add new item!
+          </Button>
+          <Button
+            leftIcon={<FontAwesomeIcon icon={faCartShopping} />}
+            onClick={() => setshowCart()}
+          >
+            Show cart
+          </Button>
         </Button.Group>
       </Center>
 
@@ -141,23 +160,32 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   let totalOutcome = 0;
   let percentageIncome = "0%";
   const cookies = nookies.get(ctx);
-  console.log(cookies.token);
-  const token = await firebaseAdmin
-    .auth()
-    .verifyIdToken(cookies.token)
-    .catch(() => console.log("erorooror"));
+
+  const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
 
   // the user is authenticated!
   if (token) {
     const { uid } = token;
 
-    const res = await fetch(`http://localhost:3000/api/hello?name=${uid}`);
+    const res = await fetch(`http://localhost:3000/api/hello?name=${uid}`)
+      .then((response) => response.json())
+      .then((data) => {
+        items = data;
+        const calculatedCart = cartCalculate(items as ItemEntity[]);
+        totalIncome = calculatedCart.totalIncome;
+        totalOutcome = calculatedCart.totalOutcome;
+        percentageIncome = calculatedCart.percentageIncome;
+      });
 
-    items = await res.json();
-    const calculatedCart = cartCalculate(items as ItemEntity[]);
-    totalIncome = calculatedCart.totalIncome;
-    totalOutcome = calculatedCart.totalOutcome;
-    percentageIncome = calculatedCart.percentageIncome;
+    // items = await res.json();
+    // if (items) {
+    //   const calculatedCart = cartCalculate(items as ItemEntity[]);
+    //   totalIncome = calculatedCart.totalIncome;
+    //   console.log(totalIncome);
+
+    //   totalOutcome = calculatedCart.totalOutcome;
+    //   percentageIncome = calculatedCart.percentageIncome;
+    // }
   }
 
   return {

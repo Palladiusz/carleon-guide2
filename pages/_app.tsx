@@ -11,6 +11,7 @@ import { auth } from "../server";
 import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
 import { AuthProvider } from "../store/authContext";
+import { ItemsProvider } from "../store/itemsContext";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -19,7 +20,7 @@ export default function App(props: AppProps) {
       name: "",
       buy: 0,
       sell: 0,
-      enchantment: 0,
+      enchant: 0,
       tier: 2,
       fraction: Fraction.TF,
     },
@@ -92,9 +93,11 @@ export default function App(props: AppProps) {
                 },
               })}
             >
-              <UserFormProvider form={form}>
-                <Component {...pageProps} />
-              </UserFormProvider>
+              <ItemsProvider>
+                <UserFormProvider form={form}>
+                  <Component {...pageProps} />
+                </UserFormProvider>
+              </ItemsProvider>
             </AppShell>
           </NotificationsProvider>
         </MantineProvider>
