@@ -9,7 +9,6 @@ import { showNotification } from "@mantine/notifications";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { ItemsContext } from "../store/itemsContext";
-import { ItemEntity } from "../interfaces";
 
 interface Props {
   toggle: () => void;

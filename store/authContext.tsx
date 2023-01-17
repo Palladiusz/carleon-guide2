@@ -24,14 +24,12 @@ export function AuthProvider({ children }: any) {
     });
   }, []);
 
-  // force refresh the token every 10 minutes
   useEffect(() => {
     const handle = setInterval(async () => {
       const user = auth.currentUser;
       if (user) await user.getIdToken(true);
     }, 10 * 60 * 1000);
 
-    // clean up setInterval
     return () => clearInterval(handle);
   }, []);
 

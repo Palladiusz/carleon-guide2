@@ -30,19 +30,3 @@ export function cartCalculate(items: ItemEntity[]) {
 
   return { totalIncome, totalOutcome, percentageIncome };
 }
-
-export function getFractionColor(fraction: Fraction) {
-  switch (fraction) {
-    case Fraction.BW:
-      return "bg-gradient-to-b from-orange-600 to-orange-700";
-    case Fraction.FS:
-      return "bg-gradient-to-b from-gray-400 to-gray-500";
-    case Fraction.LYM:
-      return "bg-gradient-to-b from-green-600 to-green-700";
-    case Fraction.ML:
-      return "bg-gradient-to-b from-blue-600 to-blue-700";
-    default:
-    case Fraction.TF:
-      return "bg-gradient-to-b from-purple-600 to-purple-700";
-  }
-}

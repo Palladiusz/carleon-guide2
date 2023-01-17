@@ -1,8 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-
-import { useUserFormContext } from "../store/formContext";
-import { Text, Center, Table } from "@mantine/core";
+import { Table } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { ItemsContext } from "../store/itemsContext";
 import { cartCalculate } from "../utils/calculations";

@@ -1,14 +1,13 @@
 import { faCheck, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, NumberInput, TextInput } from "@mantine/core";
+import { Badge, Button, NumberInput, TextInput } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useContext, useState } from "react";
-
 import { ItemEntity } from "../interfaces";
 import { AuthContext } from "../store/authContext";
 import { ItemsContext } from "../store/itemsContext";
 import { calculateProfitInPercentages } from "../utils/calculations";
-import { getImgUrl } from "../utils/getImgUrl";
+import { getFractionColor } from "../utils/fractionColors";
 import ItemImage from "./ItemImage";
 
 interface ITableElementsProps {
@@ -176,7 +175,11 @@ function SingleItemRow(rowProps: ITableElementsProps) {
       <td>{calculateProfitInPercentages(buy, sell)}</td>
       <td>{tier}</td>
       <td>{enchant}</td>
-      <td>{fraction}</td>
+      <td>
+        <Badge color={getFractionColor(fraction)} size="lg">
+          {fraction}
+        </Badge>
+      </td>
       <td>
         <Button.Group orientation="vertical">
           {isEdit ? (
@@ -209,116 +212,6 @@ function SingleItemRow(rowProps: ITableElementsProps) {
         </Button.Group>
       </td>
     </tr>
-    // <tr key={id}>
-    //   <th className="w-24 h-20">
-    //     <div>
-    //       {isEdit ? (
-    //         <input
-    //           type="number"
-    //           placeholder="Quantity"
-    //           name="quantity"
-    //           value={editValues.quantity}
-    //           onChange={(e) => {
-    //             setEditValues({
-    //               ...editValues,
-    //               quantity: parseInt(e.target.value),
-    //             });
-    //           }}
-    //           className="w-full bg-orange-700 bg-opacity-40 rounded border border-gray-700 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-    //         />
-    //       ) : (
-    //         quantity
-    //       )}
-    //     </div>
-    //   </th>
-    //   <td className="w-24">
-    //     <img
-    //       src={getImgUrl({ name, tier, enchant })}
-    //       alt="new"
-    //       className="w-24"
-    //     />
-    //   </td>
-    //   <td className="w-24 h-20 text-center">
-    //     {isEdit ? (
-    //       <input
-    //         type="text"
-    //         placeholder="Item name"
-    //         name="name"
-    //         value={editValues.name}
-    //         onChange={(e) => {
-    //           setEditValues({ ...editValues, name: e.target.value });
-    //         }}
-    //         className="w-full bg-orange-700 bg-opacity-40 rounded border border-gray-700 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-    //       />
-    //     ) : (
-    //       name
-    //     )}
-    //   </td>
-    //   <td className="w-24 h-20  text-center">
-    //     {isEdit ? (
-    //       <input
-    //         type="number"
-    //         placeholder="Buy price"
-    //         name="buy"
-    //         value={editValues.buy}
-    //         onChange={(e) => {
-    //           setEditValues({ ...editValues, buy: parseInt(e.target.value) });
-    //         }}
-    //         className="w-full bg-orange-700 bg-opacity-40 rounded border border-gray-700 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-    //       />
-    //     ) : (
-    //       numberWithSpaces(buy)
-    //     )}
-    //   </td>
-    //   <td className="w-24 h-20  text-center">
-    //     {isEdit ? (
-    //       <input
-    //         type="number"
-    //         placeholder="Sell price"
-    //         name="sell"
-    //         value={editValues.sell}
-    //         onChange={(e) => {
-    //           setEditValues({ ...editValues, sell: parseInt(e.target.value) });
-    //         }}
-    //         className="w-full bg-orange-700 bg-opacity-40 rounded border border-gray-700 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent focus:border-indigo-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-    //       />
-    //     ) : (
-    //       numberWithSpaces(sell)
-    //     )}
-    //   </td>
-    //   <td className="w-24 h-20  text-center">{numberWithSpaces(sell - buy)}</td>
-    //   <td className="w-24 h-20  text-center">
-    //     {calculateProfitInPercentages(buy, sell)}
-    //   </td>
-    //   <td className="w-24 h-20  text-center">{tier}</td>
-    //   <td className="w-24 h-20  text-center">{enchant}</td>
-    //   <td className="w-24 h-20  text-center flex items-center justify-center mt-3">
-    //     {isEdit ? (
-    //       <SmallButton
-    //         children={<FaCheck />}
-    //         handleClick={() => {
-    //           handleEditSubmit();
-    //           setIsEdit(false);
-    //         }}
-    //       />
-    //     ) : (
-    //       <SmallButton
-    //         children={<FaEdit />}
-    //         handleClick={() => {
-    //           setIsEdit(true);
-    //         }}
-    //       />
-    //     )}
-
-    //     <SmallButton
-    //       children={<FaTrashAlt />}
-    //       handleClick={() => {
-    //         deleteItem(id);
-    //         dispatch(removeItem({ id: id }));
-    //       }}
-    //     />
-    //   </td>
-    // </tr>
   );
 }
 

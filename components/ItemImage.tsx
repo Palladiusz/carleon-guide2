@@ -1,5 +1,3 @@
-import { Select } from "@mantine/core";
-import { useUserFormContext } from "../store/formContext";
 import Image from "next/image";
 import { getImgUrl } from "../utils/getImgUrl";
 import { useState } from "react";
