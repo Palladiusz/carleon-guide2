@@ -114,7 +114,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   if (token) {
     const { uid } = token;
 
-    const res = await fetch(`/api/hello?name=${uid}`)
+    const res = await fetch(
+      `https://carleon-guide2.netlify.app/api/hello?name=${uid}`
+    )
       .then((response) => response.json())
       .then((data) => {
         items = data;

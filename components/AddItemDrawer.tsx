@@ -62,13 +62,16 @@ const InputDrawer: React.FC<Props> = ({ toggle, isOpened }) => {
         onClick={async () => {
           const body = { ...form.values, uid: auth.user?.uid };
 
-          const res = await fetch("/api/hello", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-          })
+          const res = await fetch(
+            "https://carleon-guide2.netlify.app/api/hello",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            }
+          )
             .then((response) => response.json())
             .then((data) => {
               setCurrentItems([...gameItems, data.newItem]);
