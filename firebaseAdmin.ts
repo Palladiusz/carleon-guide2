@@ -8,11 +8,10 @@ import * as firebaseAdmin from "firebase-admin";
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert({
-      privateKey: process.env.REACT_APP_PRIVATE_KEY
-        ? JSON.parse(process.env.REACT_APP_PRIVATE_KEY)
-        : undefined,
-      clientEmail: process.env.REACT_APP_CLIENT_EMAIL,
-      projectId: process.env.REACT_APP_PROJECT_ID,
+      privateKey: process.env.NEXT_PUBLIC_PRIVATE_KEY,
+
+      clientEmail: process.env.NEXT_PUBLIC_CLIENT_EMAIL,
+      projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
     }),
     databaseURL: "https://carleon-guide.firebaseio.com",
   });

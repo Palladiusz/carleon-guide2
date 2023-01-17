@@ -20,6 +20,7 @@
     "@mantine/hooks": "^5.10.1",
     "@mantine/next": "5.10.1",
     "@mantine/notifications": "^5.10.1",
+    "dotenv": "^16.0.3",
     "embla-carousel-react": "^7.0.6",
     "firebase": "^9.15.0",
     "firebase-admin": "^11.4.1",

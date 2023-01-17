@@ -105,9 +105,7 @@ export default function IndexPage(props: Props) {
 }
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   let items = {};
-  let totalIncome = 0;
-  let totalOutcome = 0;
-  let percentageIncome = "0%";
+
   const cookies = nookies.get(ctx);
 
   const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
@@ -126,9 +124,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   return {
     props: {
       itemEntities: items,
-      totalIncome,
-      totalOutcome,
-      percentageIncome,
     },
   };
 };
