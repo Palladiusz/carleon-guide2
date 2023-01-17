@@ -9,7 +9,7 @@ if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert({
       privateKey: process.env.REACT_APP_PRIVATE_KEY
-        ? process.env.REACT_APP_PRIVATE_KEY.replace(/\\n/gm, "\n")
+        ? JSON.parse(process.env.REACT_APP_PRIVATE_KEY)
         : undefined,
       clientEmail: process.env.REACT_APP_CLIENT_EMAIL,
       projectId: process.env.REACT_APP_PROJECT_ID,
