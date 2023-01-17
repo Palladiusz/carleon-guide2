@@ -108,21 +108,22 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   const cookies = nookies.get(ctx);
 
-  const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+  if (cookies.token) {
+    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
 
-  // the user is authenticated!
-  if (token) {
-    const { uid } = token;
+    // the user is authenticated!
+    if (token) {
+      const { uid } = token;
 
-    const res = await fetch(
-      `https://carleon-guide2.netlify.app/api/hello?name=${uid}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        items = data;
-      });
+      const res = await fetch(
+        `https://carleon-guide2.netlify.app/api/hello?name=${uid}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          items = data;
+        });
+    }
   }
-
   return {
     props: {
       itemEntities: items,
