@@ -110,12 +110,12 @@ function SingleItemRow(rowProps: ITableElementsProps) {
             onChange={(e) => {
               setEditValues({
                 ...editValues,
-                quantity: e!,
+                quantity: e || 0,
               });
             }}
           />
         ) : (
-          quantity
+          quantity.toLocaleString()
         )}
       </td>
       <td>
@@ -129,7 +129,7 @@ function SingleItemRow(rowProps: ITableElementsProps) {
             onChange={(e) => {
               setEditValues({
                 ...editValues,
-                name: e.target.value,
+                name: e.target.value || "",
               });
             }}
           />
@@ -146,12 +146,12 @@ function SingleItemRow(rowProps: ITableElementsProps) {
             onChange={(e) => {
               setEditValues({
                 ...editValues,
-                buy: e!,
+                buy: e || 0,
               });
             }}
           />
         ) : (
-          buy
+          buy.toLocaleString()
         )}
       </td>
       <td>
@@ -163,12 +163,12 @@ function SingleItemRow(rowProps: ITableElementsProps) {
             onChange={(e) => {
               setEditValues({
                 ...editValues,
-                sell: e!,
+                sell: e || 0,
               });
             }}
           />
         ) : (
-          sell
+          sell.toLocaleString()
         )}
       </td>
       <td>{sell - buy}</td>

@@ -35,7 +35,6 @@ const InputDrawer: React.FC<Props> = ({ toggle, isOpened }) => {
       />
       <Divider my="sm" />
       <NumberInput
-        defaultValue={18}
         parser={(value) => value && value.replace(/\$\s?|(,*)/g, "")}
         placeholder="Buy price"
         label="Buy price"
@@ -44,7 +43,6 @@ const InputDrawer: React.FC<Props> = ({ toggle, isOpened }) => {
       />
       <Divider my="sm" />
       <NumberInput
-        defaultValue={18}
         parser={(value) => value && value.replace(/\$\s?|(,*)/g, "")}
         placeholder="Sell price"
         label="Sell price"

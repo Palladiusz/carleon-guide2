@@ -50,8 +50,8 @@ function Cart() {
         </thead>
         <tbody style={{ textAlign: "center" }}>
           <tr>
-            <td>{values.outcome}</td>
-            <td>{values.income}</td>
+            <td>{values.outcome.toLocaleString()}</td>
+            <td>{values.income.toLocaleString()}</td>
             <td>{values.percentage}</td>
           </tr>
         </tbody>
