@@ -38,6 +38,7 @@ export default function IndexPage(props: Props) {
       .filter((item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
+      .reverse()
       .map((element) => {
         return <SingleItemRow key={element.id} item={element} />;
       });
@@ -109,20 +110,22 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const cookies = nookies.get(ctx);
 
   if (cookies.token) {
-    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
+    try {
+      const token = await firebaseAdmin.auth().verifyIdToken(cookies.token);
 
-    // the user is authenticated!
-    if (token) {
-      const { uid } = token;
+      // the user is authenticated!
+      if (token) {
+        const { uid } = token;
 
-      const res = await fetch(
-        `https://carleon-guide2.netlify.app/api/hello?name=${uid}`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          items = data;
-        });
-    }
+        const res = await fetch(
+          `https://carleon-guide2.netlify.app/api/hello?name=${uid}`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            items = data;
+          });
+      }
+    } catch (error) {}
   }
   return {
     props: {
