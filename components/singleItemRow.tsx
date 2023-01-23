@@ -3,6 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Badge, Button, NumberInput, TextInput } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useContext, useState } from "react";
+import {
+  DraggableProvidedDraggableProps,
+  DraggableProvidedDragHandleProps,
+} from "react-beautiful-dnd";
 import { ItemEntity } from "../interfaces";
 import { AuthContext } from "../store/authContext";
 import { ItemsContext } from "../store/itemsContext";
@@ -12,9 +16,12 @@ import ItemImage from "./ItemImage";
 
 interface ITableElementsProps {
   item: ItemEntity;
+  dragRef: (element: HTMLElement | null) => void;
+  dragProp: DraggableProvidedDraggableProps;
+  dragHandleprop: DraggableProvidedDragHandleProps | null | undefined;
 }
 
-function SingleItemRow(rowProps: ITableElementsProps) {
+function SingleItemRow(rowProps: ITableElementsProps, { ...rest }) {
   const {
     name,
     buy,
@@ -25,6 +32,7 @@ function SingleItemRow(rowProps: ITableElementsProps) {
     fraction,
     quantity,
   } = rowProps.item;
+
   const [isEdit, setIsEdit] = useState(false);
   const [editValues, setEditValues] = useState({ name, buy, sell, quantity });
   const auth = useContext(AuthContext);
@@ -36,7 +44,6 @@ function SingleItemRow(rowProps: ITableElementsProps) {
     const modifiedItem = { ...rowProps.item, ...editValues };
 
     const body = { modifiedItem, uid: auth.user?.uid };
-    console.log(body);
 
     const res = await fetch("https://carleon-guide2.netlify.app/api/hello", {
       method: "PUT",
@@ -100,7 +107,12 @@ function SingleItemRow(rowProps: ITableElementsProps) {
   }
 
   return (
-    <tr key={id}>
+    <tr
+      key={id}
+      {...rowProps.dragHandleprop}
+      {...rowProps.dragProp}
+      ref={rowProps.dragRef}
+    >
       <td>
         {isEdit ? (
           <NumberInput

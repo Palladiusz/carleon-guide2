@@ -6,14 +6,20 @@ import { ItemEntity } from "../interfaces";
 import { GetServerSidePropsContext } from "next";
 import nookies from "nookies";
 import { firebaseAdmin } from "../firebaseAdmin";
-
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCartShopping,
+  faCheck,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
 import { ItemsContext } from "../store/itemsContext";
 import SingleItemRow from "../components/singleItemRow";
 import Cart from "../components/Cart";
 import { SearchContext } from "../store/searchContext";
+import { AuthContext } from "../store/authContext";
+import { showNotification } from "@mantine/notifications";
 
 interface Props {
   itemEntities: ItemEntity[];
@@ -24,31 +30,54 @@ export default function IndexPage(props: Props) {
   const [showCart, setShowCart] = useToggle();
   const { gameItems, setCurrentItems } = useContext(ItemsContext);
   const { searchTerm } = useContext(SearchContext);
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     setCurrentItems(props.itemEntities);
   }, []);
 
-  let rows;
+  let filteredItems = gameItems.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const form = useUserFormContext();
+  const onDragEnd = (result: any) => {
+    if (!result.destination) {
+      return;
+    }
 
-  if (gameItems.length > 0) {
-    rows = gameItems
-      .filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .reverse()
-      .map((element) => {
-        return <SingleItemRow key={element.id} item={element} />;
-      });
-  } else {
-    rows = (
-      <tr key={""}>
-        <td></td>
-      </tr>
-    );
-  }
+    const newItems = Array.from(gameItems);
+    const [removed] = newItems.splice(result.source.index, 1);
+    newItems.splice(result.destination.index, 0, removed);
+
+    const newIdsOrder = newItems.map((e) => e.id);
+
+    setCurrentItems(newItems);
+    const body = { newIdsOrder, uid: auth.user?.uid };
+    console.log(JSON.stringify(body));
+
+    fetch("https://carleon-guide2.netlify.app/listOrder", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        showNotification({
+          title: data.message,
+          message: "",
+          icon: <FontAwesomeIcon icon={faCheck} />,
+        });
+      })
+      .catch(() =>
+        showNotification({
+          title: "Error",
+          message: "Failed to edit item",
+          color: "red",
+        })
+      );
+  };
 
   const tableHeaders = [
     "Quantity",
@@ -88,24 +117,52 @@ export default function IndexPage(props: Props) {
       <Collapse in={showCart}>
         <Cart />
       </Collapse>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Table striped horizontalSpacing="md">
+          <thead>
+            <tr>
+              {tableHeaders.map((e) => (
+                <th key={e} style={{ textAlign: "center" }}>
+                  {e}
+                </th>
+              ))}
+            </tr>
+          </thead>
 
-      <Table striped horizontalSpacing="md">
-        <thead>
-          <tr>
-            {tableHeaders.map((e) => (
-              <th key={e} style={{ textAlign: "center" }}>
-                {e}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody style={{ textAlign: "center" }}>{rows}</tbody>
-      </Table>
+          <Droppable droppableId="table">
+            {(provided, snapshot) => (
+              <tbody ref={provided.innerRef} style={{ textAlign: "center" }}>
+                {filteredItems.map((item, index) => (
+                  <Draggable
+                    key={item.id}
+                    draggableId={item.id.toString()}
+                    index={index}
+                    isDragDisabled={searchTerm !== ""}
+                  >
+                    {(provided, snapshot) => {
+                      return (
+                        <SingleItemRow
+                          dragRef={provided.innerRef}
+                          dragProp={provided.draggableProps}
+                          dragHandleprop={provided.dragHandleProps}
+                          key={item.id}
+                          item={item}
+                        />
+                      );
+                    }}
+                  </Draggable>
+                ))}
+              </tbody>
+            )}
+          </Droppable>
+        </Table>
+      </DragDropContext>
     </>
   );
 }
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   let items: ItemEntity[] = [];
+  let orderedIdList: string[] = [];
 
   const cookies = nookies.get(ctx);
 
@@ -117,13 +174,33 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       if (token) {
         const { uid } = token;
 
-        const res = await fetch(
-          `https://carleon-guide2.netlify.app/api/hello?name=${uid}`
-        )
+        await fetch(`https://carleon-guide2.netlify.app/api/hello?name=${uid}`)
           .then((response) => response.json())
           .then((data) => {
             items = data;
           });
+
+        await fetch(
+          `https://carleon-guide2.netlify.app/api/listOrder?name=${uid}`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            orderedIdList = data;
+          });
+
+        items = items.sort((a, b) => {
+          const aIndex = orderedIdList.indexOf(a.id);
+          const bIndex = orderedIdList.indexOf(b.id);
+
+          if (aIndex < bIndex) {
+            return -1;
+          }
+          if (aIndex > bIndex) {
+            return 1;
+          }
+
+          return 0;
+        });
       }
     } catch (error) {}
   }

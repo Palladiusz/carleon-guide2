@@ -50,7 +50,6 @@ export default async function handler(
     const { modifiedItem, uid } = await req.body;
 
     const postListRef = ref(database, uid + "/items" + `/${modifiedItem.id}`);
-    console.log(modifiedItem);
 
     set(postListRef, {
       ...modifiedItem,
