@@ -40,7 +40,7 @@ export default function IndexPage(props: Props) {
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = async (result: any) => {
     if (!result.destination) {
       return;
     }
@@ -55,7 +55,7 @@ export default function IndexPage(props: Props) {
     const body = { newIdsOrder, uid: auth.user?.uid };
     console.log(JSON.stringify(body));
 
-    fetch("https://carleon-guide2.netlify.app/listOrder", {
+    await fetch("https://carleon-guide2.netlify.app/api/listOrder", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
