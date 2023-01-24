@@ -138,6 +138,7 @@ export default function IndexPage(props: Props) {
                     draggableId={item.id.toString()}
                     index={index}
                     isDragDisabled={searchTerm !== ""}
+                    shouldRespectForcePress={true}
                   >
                     {(provided, snapshot) => {
                       return (

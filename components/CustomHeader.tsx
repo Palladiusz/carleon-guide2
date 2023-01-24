@@ -4,6 +4,9 @@ import {
   Autocomplete,
   Group,
   Title,
+  MediaQuery,
+  Burger,
+  Menu,
 } from "@mantine/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -26,12 +29,6 @@ const useStyles = createStyles((theme) => ({
 
   links: {
     [theme.fn.smallerThan("md")]: {
-      display: "none",
-    },
-  },
-
-  search: {
-    [theme.fn.smallerThan("xs")]: {
       display: "none",
     },
   },
@@ -67,6 +64,7 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const { setSearchTerm } = useContext(SearchContext);
+  const [opened, setOpened] = useState(false);
 
   const items = links.map((link) => (
     <a
@@ -77,6 +75,7 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
         event.preventDefault();
         if (link.additionalFunction) link.additionalFunction();
         router.push(link.link);
+        setOpened(false);
       }}
     >
       {link.label}
@@ -100,7 +99,6 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
             {items}
           </Group>
           <Autocomplete
-            className={classes.search}
             placeholder="Search"
             icon={<FontAwesomeIcon icon={faSearch} />}
             data={["bow", "cowl", "jacket", "shoes"]}
@@ -108,6 +106,19 @@ export function HeaderSearch({ links }: HeaderSearchProps) {
             onChange={handleSearch}
           />
         </Group>
+        <MediaQuery largerThan="md" styles={{ display: "none" }}>
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <Burger opened={opened} onClick={() => setOpened((o) => !o)} />
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              {items.map((e) => (
+                <Menu.Item>{e}</Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+        </MediaQuery>
       </div>
     </Header>
   );
